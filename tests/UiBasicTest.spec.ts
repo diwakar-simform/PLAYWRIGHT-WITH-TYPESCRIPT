@@ -17,15 +17,29 @@ test("Browser context explanation Test with browser fixtures", async ({browser})
 
 test.only("Browser context deafaul with page fixuters", async ({page})=>{
 
+    const userName = page.locator("#username");
+    const password = page.locator("#password");
+    const signInBtn = page.locator("#signInBtn");
+
     await page.goto("https://rahulshettyacademy.com/loginpagePractise/");
     console.log(await page.title());
 
-    await page.locator("#username").fill("Diwakar");
-    await page.locator("#password").fill("32456ytui");
-    await page.locator("#signInBtn").click();
+    await userName.fill("Diwakar");
+    await password.fill("32456ytui");
+    await signInBtn.click();
 
     console.log(await page.locator("[style*='block']").textContent());
 
     await expect(page.locator("[style*='block']")).toContainText('Incorrect');
+
+    await userName.fill(""); // This will clear the existing entered value.
+
+    await userName.fill("rahulshettyacademy");
+    await password.fill("Learning@830$3mK2");
+    await signInBtn.click();
+
+    console.log(await page.locator(".card-body a").first().textContent());
+    console.log(await page.locator(".card-body a").nth(1).textContent());
+
 
 })
