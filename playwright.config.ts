@@ -4,7 +4,7 @@ const config = ({
   testDir: './tests',
   timeout: 40000, /*this timeout is for overall test case failure*/
   expect:{
-    timeout: 40*1000 /*this timeout is for expect assertion statement time*/
+    timeout: 5*1000 /*this timeout is for expect assertion statement time*/
   },
 
   reporter : 'html',
