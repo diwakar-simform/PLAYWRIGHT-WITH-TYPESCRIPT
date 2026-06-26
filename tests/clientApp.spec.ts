@@ -95,17 +95,53 @@ test.only("Login to the client app > add to cart > verify cart item -> checkout 
     // Step 3: Navigate to Cart Dashboard and verify the product and click on buy now button.
 
     await page.locator("[routerlink*='/dashboard/cart']").click();
+    // await page.locator("div li").waitFor(); // we need to explicity mention this because isVisible method doesn't have auto-wait mechanism.
+    await page.locator("div li").first().waitFor(); // in case of mutiple elements, otherwise test will fail
 
-    const bool = page.locator("h3:has-text('ZARA COAT 3')").isVisible();
-    expect(bool).toBeTruthy();
+    const bool = await page.locator("h3:has-text('ZARA COAT 3')").isVisible();
+    await expect(bool).toBeTruthy();
 
+    // Step 4: Navigate to Checkout page.
+    // one way: 
+    await page.locator("text='Checkout'").click();
+
+    // second way:
     // await page
     //     .locator(".items")
     //     .filter({ hasText: "ADIDAS ORIGINAL" })
     //     .getByRole("button", { name: "Buy Now" })
     //     .click();
 
-    // Step 4: Fill the payment details and make payment
+    // Step 5: Fill the payment details and make payment
+
+    await page.locator("[placeholder *= 'Country']").pressSequentially('ind',{delay:100});
+
+    const dropdown = page.locator(".ta-results");
+    await dropdown.waitFor();
+
+    const option = dropdown.locator('button');
+
+    // await dropdown.getByRole('button').filter({hasText: " India"}).click(); // need to debug
+
+    const optionCount = await option.count();
+
+
+    for(let i = 0; i < optionCount; ++i){
+
+        const text = await option.nth(i).textContent();
+        if (text === " India"){ // for exact match
+
+            await option.nth(i).click();
+            break;
+        }
+
+        // if (text?.includes(" India")){ // its like contains or like query
+
+        //     await option.nth(i).click();
+        //     break;
+        // }
+    }
+
 
 
     await page.pause();
